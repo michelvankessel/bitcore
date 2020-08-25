@@ -1,6 +1,6 @@
 'use strict';
 
-var docsURL = 'http://bitcore.io/';
+var docsURL = 'http://litecore.io/';
 
 module.exports = [{
   name: 'InvalidB58Char',
@@ -45,13 +45,6 @@ module.exports = [{
     'message': 'Invalid exchange rate: {0}'
   }]
 }, {
-  name: 'MerkleBlock',
-  message: 'Internal Error on MerkleBlock {0}',
-  errors: [{
-    'name': 'InvalidMerkleTree',
-    'message': 'This MerkleBlock contain an invalid Merkle Tree'
-  }]
-}, {
   name: 'Transaction',
   message: 'Internal Error on Transaction {0}',
   errors: [{
@@ -66,14 +59,7 @@ module.exports = [{
     }, {
       name: 'MissingPreviousOutput',
       message: 'No previous output information.'
-    }, {
-      name: 'BlockHeightOutOfRange',
-      message: 'Block Height can only be between 0 and 65535'
-    } , {
-      name: 'LockTimeRange',
-      message: 'Seconds needs to be more that 0 and less that 33553920'
-    }
-    ]
+    }]
   }, {
     name: 'NeedMoreInfo',
     message: '{0}'

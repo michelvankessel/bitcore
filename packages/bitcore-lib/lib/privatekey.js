@@ -103,7 +103,7 @@ PrivateKey.prototype._classifyArguments = function(data, network) {
     info.network = Networks.get(data);
   } else if (typeof(data) === 'string'){
     if (JSUtil.isHexa(data)) {
-      info.bn = new BN(Buffer.from(data, 'hex'));
+      info.bn = new BN(new Buffer(data, 'hex'));
     } else {
       info = PrivateKey._transformWIF(data, network);
     }
@@ -310,11 +310,11 @@ PrivateKey.prototype.toWIF = function() {
 
   var buf;
   if (compressed) {
-    buf = Buffer.concat([Buffer.from([network.privatekey]),
+    buf = Buffer.concat([new Buffer([network.privatekey]),
                          this.bn.toBuffer({size: 32}),
-                         Buffer.from([0x01])]);
+                         new Buffer([0x01])]);
   } else {
-    buf = Buffer.concat([Buffer.from([network.privatekey]),
+    buf = Buffer.concat([new Buffer([network.privatekey]),
                          this.bn.toBuffer({size: 32})]);
   }
 
@@ -336,19 +336,7 @@ PrivateKey.prototype.toBigNumber = function(){
  * @returns {Buffer} A buffer of the private key
  */
 PrivateKey.prototype.toBuffer = function(){
-  return this.bn.toBuffer({size: 32});
-};
-
-/**
- * WARNING: This method will not be officially supported until v1.0.0.
- *
- *
- * Will return the private key as a BN buffer without leading zero padding
- *
- * @returns {Buffer} A buffer of the private key
- */
-PrivateKey.prototype.toBufferNoPadding = function() {
-  return this.bn.toBuffer();
+  return this.bn.toBuffer({ size: 32 });
 };
 
 /**
@@ -366,14 +354,13 @@ PrivateKey.prototype.toPublicKey = function(){
 /**
  * Will return an address for the private key
  * @param {Network=} network - optional parameter specifying
- * @param {string} type - Either 'pubkeyhash', 'witnesspubkeyhash', or 'scripthash'
  * the desired network for the address
  *
  * @returns {Address} An address generated from the private key
  */
-PrivateKey.prototype.toAddress = function(network, type) {
+PrivateKey.prototype.toAddress = function(network) {
   var pubkey = this.toPublicKey();
-  return Address.fromPublicKey(pubkey, network || this.network, type);
+  return Address.fromPublicKey(pubkey, network || this.network);
 };
 
 /**

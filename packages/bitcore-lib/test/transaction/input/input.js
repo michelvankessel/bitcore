@@ -14,11 +14,11 @@ var Input = bitcore.Transaction.Input;
 
 describe('Transaction.Input', function() {
 
-  var privateKey = new PrivateKey('KwF9LjRraetZuEjR8VqEq539z137LW5anYDUnVK11vM3mNMHTWb4');
+  var privateKey = new PrivateKey('T35QnUj2z2sAg5NHg8n73RaXvrgRQb6Ubk7jeHwYatXDHFvTPJyA');
   var publicKey = privateKey.publicKey;
   var address = new Address(publicKey, Networks.livenet);
   var output = {
-    address: '33zbk2aSZYdNbRsMPPt6jgy6Kq1kQreqeb',
+    address: 'MACk3uzQWfUoPw9FVGsSZLDVeXcCKarBfA',
     prevTxId: '66e64ef8a3b384164b78453fa8c8194de9a473ba14f89485a0e433699daec140',
     outputIndex: 0,
     script: new Script(address),
@@ -95,40 +95,5 @@ describe('Transaction.Input', function() {
   it('_estimateSize returns correct size', function() {
     var input = new Input(output);
     input._estimateSize().should.equal(66);
-  });
-
-  describe('handling the BIP68 (sequenceNumber locktime)', function() {
-    var blockHeight = 3434;
-    it('handles a null locktime', function() {
-      var input = new Input(output);
-      expect(input.getLockTime()).to.equal(null);
-    });
-    it('handles a simple seconds example', function() {
-      var input = new Input()
-        .lockForSeconds(1e5);
-
-      var expected = (parseInt(1e5 / 512) * 512) ;
-      input.getLockTime().should.deep.equal(expected);
-
-      expected = (Math.floor(expected/512) ) | Input.SEQUENCE_LOCKTIME_TYPE_FLAG;
-      input.sequenceNumber.should.equal(expected | Input.SEQUENCE_LOCKTIME_TYPE_FLAG);
-    });
-    it('accepts a block height', function() {
-      var input = new Input()
-        .lockUntilBlockHeight(blockHeight);
-
-      input.sequenceNumber.should.equal(blockHeight);
-      input.getLockTime().should.deep.equal(blockHeight);
-    });
-    it('fails if the block height is too high', function() {
-      expect(function() {
-        return new Input().lockUntilBlockHeight(5e8);
-      }).to.throw(errors.Transaction.Input.BlockHeightOutOfRange);
-    });
-    it('fails if the block height is negative', function() {
-      expect(function() {
-        return new Input().lockUntilBlockHeight(-1);
-      }).to.throw(errors.Transaction.Input.BlockHeightOutOfRange);
-    });
   });
 });
